@@ -6,6 +6,16 @@ import re
 command_regex = re.compile('#([a-zA-Z]+)')
 COMMANDS_RAN = []
 
+paused = False
+COMMANDS_PAUSED = []
+
+def toggle_pause(memory):
+	paused = not paused
+	if not paused:
+		while len(COMMANDS_PAUSED) > 0:
+			val = COMMANDS_PAUSED.pop(0)
+			exec_command(val, memory)
+
 def find_explicit_command(message, amount, commands_config):
 	match = command_regex.search(message)
 	if match:
@@ -25,7 +35,11 @@ def find_implicit_command(amount, commands_config):
 	return best_command_name
 
 def do_run_command(name, command, amount, commands_config, memory):
-	exec_command((COMMANDS[name]['id'] << 24) | (COMMANDS[name]['payload_func'](name, amount, commands_config) & 0xFFFFFF), memory)
+	val = (COMMANDS[name]['id'] << 24) | (COMMANDS[name]['payload_func'](name, amount, commands_config) & 0xFFFFFF)
+	if paused:
+		COMMANDS_PAUSED.append(val)
+	else:
+		exec_command(val, memory)
 
 def maybe_run_command(cheerer, message, amount, commands_config, memory):
 	command = find_explicit_command(message, amount, commands_config)

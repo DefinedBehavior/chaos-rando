@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from commands import maybe_run_command, COMMANDS_RAN
+from commands import maybe_run_command, toggle_pause, COMMANDS_RAN
 from commands_config import reload_config
 
 from bizhook import Memory
@@ -41,6 +41,11 @@ def shutdown():
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
     return 'Server shutting down...'
+
+@app.route('/pause/', methods=['POST'])
+def pause():
+    toggle_pause(sdram)
+    return ('', 200)
 
 if __name__ == '__main__':
     commands_config = reload_config()

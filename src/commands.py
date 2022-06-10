@@ -6,12 +6,13 @@ import re
 command_regex = re.compile('#([a-zA-Z]+)')
 COMMANDS_RAN = []
 
-paused = False
+PAUSED = False
 COMMANDS_PAUSED = []
 
 def toggle_pause(memory):
-	paused = not paused
-	if not paused:
+	global PAUSED
+	PAUSED = not PAUSED
+	if not PAUSED:
 		while len(COMMANDS_PAUSED) > 0:
 			val = COMMANDS_PAUSED.pop(0)
 			exec_command(val, memory)
@@ -36,7 +37,7 @@ def find_implicit_command(amount, commands_config):
 
 def do_run_command(name, command, amount, commands_config, memory):
 	val = (COMMANDS[name]['id'] << 24) | (COMMANDS[name]['payload_func'](name, amount, commands_config) & 0xFFFFFF)
-	if paused:
+	if PAUSED:
 		COMMANDS_PAUSED.append(val)
 	else:
 		exec_command(val, memory)

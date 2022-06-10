@@ -1,0 +1,40 @@
+{
+  "freeze":     { "cost": 111, "explicit": false },
+  "void":       { "cost": 200, "explicit": false },
+  "age":        { "cost": 300, "explicit": false },
+  "kill":       { "cost": 400, "explicit": false },
+  "huge":       { "cost": 500, "explicit": false },
+  "tiny":       { "cost": 600, "explicit": false },
+
+  "ohko":       { "cost": 1, "explicit": true },
+  "nohud":      { "cost": 1, "explicit": true },
+  "noz":        { "cost": 1, "explicit": true },
+  "turbo":      { "cost": 1, "explicit": true },
+  "invert":     { "cost": 1, "explicit": true },
+
+  "arwing":     { "cost": 1, "explicit": true },
+  "enemy":      { "cost": 1, "explicit": true },
+
+  "givehearts": { "cost": 1, "explicit": true },
+  "takehearts": { "cost": 1, "explicit": true },
+  "giverupees": { "cost": 1, "explicit": true },
+  "takerupees": { "cost": 1, "explicit": true },
+
+  "givechus":   { "cost": 1, "explicit": true },
+  "givesticks": { "cost": 1, "explicit": true },
+  "givenuts":   { "cost": 1, "explicit": true },
+  "givebombs":  { "cost": 1, "explicit": true },
+  "givearrows": { "cost": 1, "explicit": true },
+  "giveseeds":  { "cost": 1, "explicit": true },
+
+  "takechus":   { "cost": 1, "explicit": true },
+  "takesticks": { "cost": 1, "explicit": true },
+  "takenuts":   { "cost": 1, "explicit": true },
+  "takebombs":  { "cost": 1, "explicit": true },
+  "takearrows": { "cost": 1, "explicit": true },
+  "takeseeds":  { "cost": 1, "explicit": true },
+
+  "iron":       { "cost": 1, "explicit": true },
+  "hover":      { "cost": 1, "explicit": true },
+  "fboots":     { "cost": 1, "explicit": true }
+}

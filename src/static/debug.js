@@ -62,6 +62,19 @@
 	};
 
 	document.getElementById('button-send-reload').onclick = reloadConfig;
+	document.getElementById('button-send-pause').onclick = function(e) {
+		let req = new Request('/pause/', {
+				method: 'POST',
+			});
+		fetch(req)
+			.then(res => {
+				if (res.status === 200) {
+					// Do something? 
+				} else {
+					console.error("couldn't pause :(");
+				}
+			});
+	}
 
 	function process_timeout() {
 		for (let command of ranCommands) {

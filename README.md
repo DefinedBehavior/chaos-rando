@@ -16,7 +16,8 @@ This is a set of small tools to allow Twitch chat to trigger things inside of yo
 1. Generate your randomizer seed and ROM with the Chaos Rando fork of OoT Rando: https://github.com/DefinedBehavior/OoT-Randomizer
 2. In bizhawk, ensure "Lua+LuaInterface" is selected in Config > Customize > Advanced > Lua Core, and that Mupen64Plus is the selected core (then close bizhawk)
 3. Copy the `src` folder, `commands_config.json`, `forward_command.py`, `lua_components.py`, and `play.bat` files from this repo to your bizhawk folder (all 5 should be next to the bizhawk exe)
-4. Double click on `play.bat`. This should install requirements, run bizhawk with the required LUA script, and then run the local server after a short delay. When setup is complete, your web browser should navigate to the debug page.
+4. Copy your rando ROM to the same bizhawk folder and rename it `rando.z64`
+5. Double click on `play.bat`. This should install requirements, run bizhawk with the required LUA script, and then run the local server after a short delay. When setup is complete, your web browser should navigate to the debug page.
 
 If everything is working properly, starting a new game and triggering a test message from the debug page in Link's house should work. Testing with `message = #freeze` and `amount = 999999` should trigger an ice block.
 

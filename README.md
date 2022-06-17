@@ -63,4 +63,4 @@ From the debug page, you can
 
 ## Contact
 
-Drop me a line at defined (at) definedbehaviour (dot) com if you play this :)
+Drop me a line at chaosrando (at) definedbehaviour (dot) com if you play this :)

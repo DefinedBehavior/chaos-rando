@@ -34,7 +34,7 @@
   "takearrows": { "cost": 1, "explicit": true },
   "takeseeds":  { "cost": 1, "explicit": true },
 
-  "iron":       { "cost": 1, "explicit": true },
+  "iron":       { "cost": 123, "explicit": true },
   "hover":      { "cost": 1, "explicit": true },
   "fboots":     { "cost": 1, "explicit": true }
 }

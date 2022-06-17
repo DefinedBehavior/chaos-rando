@@ -60,3 +60,7 @@ From the debug page, you can
 - Reload configuration to update the internal settings after changes to the `commands_config.json` file while chaos rando is running.
 - Pause commands until the "Pause commands" button is clicked again, after which all of the commands sent during pause will be triggered.
 - Send test commands by entering a message and a cheer amount to simulate a twitch cheer.
+
+## Contact
+
+Drop me a line at defined (at) definedbehaviour (dot) com if you play this :)

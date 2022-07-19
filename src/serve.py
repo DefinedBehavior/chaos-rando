@@ -3,12 +3,9 @@ from flask import Flask, render_template, request
 from commands import maybe_run_command, toggle_pause, COMMANDS_RAN
 from commands_config import reload_config
 
-from bizhook import Memory
-
 import webbrowser
 
 app = Flask(__name__)
-sdram = Memory('RDRAM')
 commands_config = {}
 
 @app.route("/")
@@ -20,7 +17,7 @@ def command():
     content = request.get_json()
 
     print('Got a command: ' + str(content['message']) + ' $-> ' + str(content['amount']))
-    maybe_run_command(content['cheerer'], content['message'], content['amount'], commands_config, sdram)
+    maybe_run_command(content['cheerer'], content['message'], content['amount'], commands_config)
 
     return ('', 200)
 
@@ -44,7 +41,7 @@ def shutdown():
 
 @app.route('/pause/', methods=['POST'])
 def pause():
-    toggle_pause(sdram)
+    toggle_pause()
     return ('', 200)
 
 if __name__ == '__main__':

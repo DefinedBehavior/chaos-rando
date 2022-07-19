@@ -2,6 +2,7 @@ import random
 import re
 import os
 import sys
+from functools import partial
 
 command_regex = re.compile('#([a-zA-Z]+)')
 COMMANDS_RAN = []
@@ -14,6 +15,7 @@ if os.path.exists(fifo):
     os.remove(fifo)
 
 os.mkfifo(fifo, 0o666)
+# Since we want non blocking, gotta have the fifo open for reading first. Open it here but don't do anything with it.
 throwaway = os.open(fifo, os.O_RDONLY | os.O_NONBLOCK)
 fd = os.open(fifo, os.O_WRONLY | os.O_NONBLOCK)
 
@@ -71,6 +73,7 @@ def exec_command(val):
 	print(list(val))
 	os.write(fd, val)
 
+# Payloads
 def no_payload(command_name, amount, commands_config):
 	return bytearray()
 
@@ -95,51 +98,84 @@ def random_enemy_payload(command_name, amount, commands_config):
 	];
 	return random.choice(payloads)
 
+
+# Messages
+def base_message(cheerer_name, message):
+	return cheerer_name + ': ' + message
+
+def simple_message(message, cheerer_name, command_name, config, amount):
+	return base_message(cheerer_name, message)
+
+def simple(message):
+	return partial(simple_message, message)
+
+def timed_action_message(action, cheerer_name, command_name, config, amount):
+	# TODO: support other durations
+	return base_message(cheerer_name, action + ' +30s')
+
+def timed(action):
+	return partial(timed_action_message, action)
+
+def give_or_take_message(cheerer_name, symbol, count, item):
+	return base_message(cheerer_name, symbol + count + ' ' + item)
+
+def give_message(item, cheerer_name, command_name, config, amount):
+	return give_or_take_message(cheerer_name, '+', str(unit_payload_val(command_name, amount, config)), item)
+
+def give(item):
+	return partial(give_message, item)
+
+def take_message(item, cheerer_name, command_name, config, amount):
+	return give_or_take_message(cheerer_name, '-', str(unit_payload_val(command_name, amount, config)), item)
+
+def take(item):
+	return partial(take_message, item)
+
 COMMANDS = {
 	# Instant
-	'freeze': 	  	{ 'id': 0x00, 'payload_func': no_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': freeze' },
-	'void': 	  	{ 'id': 0x01, 'payload_func': no_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': void out' },
-	'age': 		  	{ 'id': 0x02, 'payload_func': no_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': change age' },
-	'kill': 	  	{ 'id': 0x03, 'payload_func': no_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': kill' },
-	'huge': 	  	{ 'id': 0x04, 'payload_func': no_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': huge' },
-	'tiny': 	  	{ 'id': 0x05, 'payload_func': no_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': tiny' },
+	'freeze': 	  	{ 'id': 0x00, 'payload_func': no_payload, 'message_func': simple('freeze') },
+	'void': 	  	{ 'id': 0x01, 'payload_func': no_payload, 'message_func': simple('void out') },
+	'age': 		  	{ 'id': 0x02, 'payload_func': no_payload, 'message_func': simple('change age') },
+	'kill': 	  	{ 'id': 0x03, 'payload_func': no_payload, 'message_func': simple('kill') },
+	'huge': 	  	{ 'id': 0x04, 'payload_func': no_payload, 'message_func': simple('huge') },
+	'tiny': 	  	{ 'id': 0x05, 'payload_func': no_payload, 'message_func': simple('tiny') },
 
 	# Timed
-	'ohko': 	  	{ 'id': 0x06, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': OHKO +30s' },
-	'nohud': 	  	{ 'id': 0x07, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': no HUD +30s' },
-	'noz': 	 	  	{ 'id': 0x08, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': no Z +30s' },
-	'turbo': 	  	{ 'id': 0x09, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': turbo +30s' },
-	'invert': 	  	{ 'id': 0x0A, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': invert ctrls +30s' },
+	'ohko': 	  	{ 'id': 0x06, 'payload_func': per_30_sec_payload, 'message_func': timed('OHKO') },
+	'nohud': 	  	{ 'id': 0x07, 'payload_func': per_30_sec_payload, 'message_func': timed('no HUD') },
+	'noz': 	 	  	{ 'id': 0x08, 'payload_func': per_30_sec_payload, 'message_func': timed('no Z') },
+	'turbo': 	  	{ 'id': 0x09, 'payload_func': per_30_sec_payload, 'message_func': timed('turbo') },
+	'invert': 	  	{ 'id': 0x0A, 'payload_func': per_30_sec_payload, 'message_func': timed('invert ctrls') },
 
 	# Spawn
-	'arwing': 	  	{ 'id': 0x0B, 'payload_func': no_payload, 			'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': spawn arwing' },
-	'enemy': 	  	{ 'id': 0x0C, 'payload_func': random_enemy_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': spawn random enemy' },
+	'arwing': 	  	{ 'id': 0x0B, 'payload_func': no_payload, 			'message_func': simple('spawn arwing') },
+	'enemy': 	  	{ 'id': 0x0C, 'payload_func': random_enemy_payload, 'message_func': simple('spawn random enemy') },
 
 	# HP/rupees
-	'givehearts': 	{ 'id': 0x0D, 'payload_func': hearts_payload, 	'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' hearts' },
-	'takehearts': 	{ 'id': 0x0E, 'payload_func': hearts_payload, 	'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' hearts' },
-	'giverupees': 	{ 'id': 0x0F, 'payload_func': unit_payload, 	'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' rupees' },
-	'takerupees': 	{ 'id': 0x10, 'payload_func': unit_payload, 	'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' rupees' },
+	'givehearts': 	{ 'id': 0x0D, 'payload_func': hearts_payload, 	'message_func': give('hearts') },
+	'takehearts': 	{ 'id': 0x0E, 'payload_func': hearts_payload, 	'message_func': take('hearts') },
+	'giverupees': 	{ 'id': 0x0F, 'payload_func': unit_payload, 	'message_func': give('rupees') },
+	'takerupees': 	{ 'id': 0x10, 'payload_func': unit_payload, 	'message_func': take('rupees') },
 
 	# Add ammo
-	'givechus':   	{ 'id': 0x80, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' chus' },
-	'givesticks': 	{ 'id': 0x81, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' sticks' },
-	'givenuts':   	{ 'id': 0x82, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' nuts' },
-	'givebombs':  	{ 'id': 0x83, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' bombs' },
-	'givearrows': 	{ 'id': 0x84, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' arrows' },
-	'giveseeds':  	{ 'id': 0x85, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': +' + str(unit_payload_val(command_name, amount, config)) + ' seeds' },
+	'givechus':   	{ 'id': 0x80, 'payload_func': unit_payload, 'message_func': give('chus') },
+	'givesticks': 	{ 'id': 0x81, 'payload_func': unit_payload, 'message_func': give('sticks') },
+	'givenuts':   	{ 'id': 0x82, 'payload_func': unit_payload, 'message_func': give('nuts') },
+	'givebombs':  	{ 'id': 0x83, 'payload_func': unit_payload, 'message_func': give('bombs') },
+	'givearrows': 	{ 'id': 0x84, 'payload_func': unit_payload, 'message_func': give('arrows') },
+	'giveseeds':  	{ 'id': 0x85, 'payload_func': unit_payload, 'message_func': give('seeds') },
 
 	# Take ammo
-	'takechus':   	{ 'id': 0xC0, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' chus' },
-	'takesticks': 	{ 'id': 0xC1, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' sticks' },
-	'takenuts':   	{ 'id': 0xC2, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' nuts' },
-	'takebombs':  	{ 'id': 0xC3, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' bombs' },
-	'takearrows': 	{ 'id': 0xC4, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' arrows' },
-	'takeseeds':  	{ 'id': 0xC5, 'payload_func': unit_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': -' + str(unit_payload_val(command_name, amount, config)) + ' seeds' },
+	'takechus':   	{ 'id': 0xC0, 'payload_func': unit_payload, 'message_func': take('chus') },
+	'takesticks': 	{ 'id': 0xC1, 'payload_func': unit_payload, 'message_func': take('sticks') },
+	'takenuts':   	{ 'id': 0xC2, 'payload_func': unit_payload, 'message_func': take('nuts') },
+	'takebombs':  	{ 'id': 0xC3, 'payload_func': unit_payload, 'message_func': take('bombs') },
+	'takearrows': 	{ 'id': 0xC4, 'payload_func': unit_payload, 'message_func': take('arrows') },
+	'takeseeds':  	{ 'id': 0xC5, 'payload_func': unit_payload, 'message_func': take('seeds') },
 
 	# Boots
-	'iron': 	  	{ 'id': 0xE2, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': iron boots +30s' },
-	'hover': 	  	{ 'id': 0xE3, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': hover boots +30s' },
-	'fboots':	  	{ 'id': 0xEF, 'payload_func': per_30_sec_payload, 'message_func': lambda cheerer_name, command_name, config, amount: cheerer_name + ': fboots +30s' },
+	'iron': 	  	{ 'id': 0xE2, 'payload_func': per_30_sec_payload, 'message_func': timed('iron boots') },
+	'hover': 	  	{ 'id': 0xE3, 'payload_func': per_30_sec_payload, 'message_func': timed('hover boots') },
+	'fboots':	  	{ 'id': 0xEF, 'payload_func': per_30_sec_payload, 'message_func': timed('fboots') },
 
 }

@@ -157,6 +157,9 @@ COMMANDS = {
 	'giverupees': 	{ 'id': 0x0F, 'payload_func': unit_payload, 	'message_func': give('rupees') },
 	'takerupees': 	{ 'id': 0x10, 'payload_func': unit_payload, 	'message_func': take('rupees') },
 
+	# CDi-Fails magic
+	'invis':		{ 'id': 0x11, 'payload_func': per_30_sec_payload, 'message_func': timed('Invisible player') },
+
 	# Add ammo
 	'givechus':   	{ 'id': 0x80, 'payload_func': unit_payload, 'message_func': give('chus') },
 	'givesticks': 	{ 'id': 0x81, 'payload_func': unit_payload, 'message_func': give('sticks') },

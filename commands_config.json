@@ -60,7 +60,7 @@
 
   "lowgrav":      { "cost": 300, "explicit": true },
   "highgrav":     { "cost": 300, "explicit": true },
-  "slowclimp":    { "cost": 300, "explicit": true },
+  "slowclimb":    { "cost": 300, "explicit": true },
   "shortshot":    { "cost": 300, "explicit": true },
 
   "explode":      { "cost": 300, "explicit": true },

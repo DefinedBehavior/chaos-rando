@@ -206,7 +206,7 @@ COMMANDS = {
 
 	'lowgrav': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Low gravity') },
 	'highgrav': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('High gravity') },
-	'slowclimp': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Slow climb') },
+	'slowclimb': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Slow climb') },
 	'shortshot': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Shortshot') },
 
 	'explode': 		{ 'id': INC_CMD_ID(), 'payload_func': no_payload, 'message_func': simple('Explosion') },

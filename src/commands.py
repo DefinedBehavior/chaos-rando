@@ -131,6 +131,13 @@ def take_message(item, cheerer_name, command_name, config, amount):
 def take(item):
 	return partial(take_message, item)
 
+CMD_ID = 0x11
+def INC_CMD_ID():
+	global CMD_ID
+	ret = CMD_ID
+	CMD_ID += 1
+	return ret 
+
 COMMANDS = {
 	# Instant
 	'freeze': 	  	{ 'id': 0x00, 'payload_func': no_payload, 'message_func': simple('freeze') },
@@ -143,7 +150,7 @@ COMMANDS = {
 	# Timed
 	'ohko': 	  	{ 'id': 0x06, 'payload_func': per_30_sec_payload, 'message_func': timed('OHKO') },
 	'nohud': 	  	{ 'id': 0x07, 'payload_func': per_30_sec_payload, 'message_func': timed('no HUD') },
-	'noz': 	 	  	{ 'id': 0x08, 'payload_func': per_30_sec_payload, 'message_func': timed('no Z') },
+	# 'noz': 	 	  	{ 'id': 0x08, 'payload_func': per_30_sec_payload, 'message_func': timed('no Z') },
 	'turbo': 	  	{ 'id': 0x09, 'payload_func': per_30_sec_payload, 'message_func': timed('turbo') },
 	'invert': 	  	{ 'id': 0x0A, 'payload_func': per_30_sec_payload, 'message_func': timed('invert ctrls') },
 
@@ -158,7 +165,54 @@ COMMANDS = {
 	'takerupees': 	{ 'id': 0x10, 'payload_func': unit_payload, 	'message_func': take('rupees') },
 
 	# CDi-Fails magic
-	'invis':		{ 'id': 0x11, 'payload_func': per_30_sec_payload, 'message_func': timed('Invisible player') },
+	'healthbars': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Health bars') },
+	'fps': 			{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('FPS view') },
+	'normalarrows': { 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Only normal arrows') },
+	'noledge': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No ledge climb') },
+	'lava': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Floor is lava') },
+	'rollplosion': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Exploding rolls') },
+	'iceroll': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Freezing rolls') },
+	'noz': 			{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No Z') },
+	'letterbox': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Mega letterbox') },
+	'noturn': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No turning') },
+	'jail': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Jail') },
+	'hold': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('On hold') },
+	'sonic': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Sonic roll') },
+	'navi': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Navi spam') },
+	'scuffed': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Scuffed Link') },
+	'rave': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Rave Mode') },
+	'invis': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Invisibility') },
+	'slip': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Slippery floor') },
+	'ice': 			{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Ice damage') },
+	'electric': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Electric damage') },
+	'knockback': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Knockback damage') },
+	'fire': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Fire damage') },
+	'jump': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No roll just jump') },
+	'bighead': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Big head') },
+	'smallhead': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Small head') },
+	'dark': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Darken') },
+	'spin': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Chaos spin') },
+	'nomelee': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No melee') },
+	'invisenemies': { 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No enemy draw') },
+	'sandstorm': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Sandstorm') },
+	'sink': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Sinking floor') },
+	'cows': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Cow ritual') },
+	'rocks': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Fire rocks rain') },
+	'cuccos': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Cucco attack') },
+	'bombrupees': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Exploding rupee challenge') },
+	'nopickup': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('No item pickup') },
+	'brokenchus': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Broken chus') },
+	'annoy': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Annoying Item Get') },
+
+
+	'lowgrav': 		{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Low gravity') },
+	'highgrav': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('High gravity') },
+	'slowclimp': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Slow climb') },
+	'shortshot': 	{ 'id': INC_CMD_ID(), 'payload_func': per_30_sec_payload, 'message_func': simple('Shortshot') },
+
+	'explode': 		{ 'id': INC_CMD_ID(), 'payload_func': no_payload, 'message_func': simple('Explosion') },
+	'restrain': 	{ 'id': INC_CMD_ID(), 'payload_func': no_payload, 'message_func': simple('Restrain Link') },
+	'space': 		{ 'id': INC_CMD_ID(), 'payload_func': no_payload, 'message_func': simple('Trip to space') },
 
 	# Add ammo
 	'givechus':   	{ 'id': 0x80, 'payload_func': unit_payload, 'message_func': give('chus') },

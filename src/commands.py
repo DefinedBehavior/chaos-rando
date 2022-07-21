@@ -91,10 +91,9 @@ def per_30_sec_payload(command_name, amount, commands_config):
 
 def random_enemy_payload(command_name, amount, commands_config):
 	payloads = [
-		0x023201, # Stalfos
-		0xDDD400, # Like-like
-		0x9098FE, # Gibdo
-		0x110B01, # wallmaster
+		int(0x02).to_bytes(2, sys.byteorder) + int(0x01).to_bytes(2, sys.byteorder),  # Stalfos
+		int(0xDD).to_bytes(2, sys.byteorder) + int(0x00).to_bytes(2, sys.byteorder),  # Like-like
+		int(0x90).to_bytes(2, sys.byteorder) + int(0xFE).to_bytes(2, sys.byteorder),  # Gibdo
 	];
 	return random.choice(payloads)
 

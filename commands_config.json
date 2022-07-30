@@ -3,24 +3,30 @@
   "void":       { "cost": 200, "explicit": false },
   "age":        { "cost": 300, "explicit": false },
   "kill":       { "cost": 400, "explicit": false },
-  "huge":       { "cost": 500, "explicit": false },
-  "tiny":       { "cost": 600, "explicit": false },
+  "enlarge":       { "cost": 500, "explicit": false },
+  "shrink":       { "cost": 600, "explicit": false },
 
   "ohko":       { "cost": 1, "explicit": true },
   "nohud":      { "cost": 1, "explicit": true },
-  "turbo":      { "cost": 1, "explicit": true },
   "invert":     { "cost": 1, "explicit": true },
 
   "arwing":     { "cost": 1, "explicit": true },
   "enemy":      { "cost": 1, "explicit": true },
+
+  "keese":      { "cost": 1, "explicit": true },
+  "wolfos":     { "cost": 1, "explicit": true },
+  "ironknuckle":{ "cost": 1, "explicit": true },
+  "peahat":     { "cost": 1, "explicit": true },
+  "stalfos":    { "cost": 1, "explicit": true },
+  "likelike":   { "cost": 1, "explicit": true },
+  "gibdo":      { "cost": 1, "explicit": true },
 
   "givehearts": { "cost": 1, "explicit": true },
   "takehearts": { "cost": 1, "explicit": true },
   "giverupees": { "cost": 1, "explicit": true },
   "takerupees": { "cost": 1, "explicit": true },
 
-  "healthbars":   { "cost": 300, "explicit": true },
-  "fps":          { "cost": 300, "explicit": true },
+  "nofps":          { "cost": 300, "explicit": true },
   "normalarrows": { "cost": 300, "explicit": true },
   "noledge":      { "cost": 300, "explicit": true },
   "lava":         { "cost": 300, "explicit": true },
@@ -66,6 +72,7 @@
   "explode":      { "cost": 300, "explicit": true },
   "restrain":     { "cost": 300, "explicit": true },
   "space":        { "cost": 300, "explicit": true },
+  "reset":        { "cost": 300, "explicit": true },
 
   "givechus":   { "cost": 1, "explicit": true },
   "givesticks": { "cost": 1, "explicit": true },
@@ -82,6 +89,5 @@
   "takeseeds":  { "cost": 1, "explicit": true },
 
   "iron":       { "cost": 123, "explicit": true },
-  "hover":      { "cost": 1, "explicit": true },
-  "fboots":     { "cost": 1, "explicit": true }
+  "hover":      { "cost": 1, "explicit": true }
 }
